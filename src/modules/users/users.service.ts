@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { getCustomRepository } from 'typeorm';
+
+import { UserRepository } from './user.repository';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    const userRepository = getCustomRepository(UserRepository);
+    const user = userRepository.create(createUserDto);
+    return userRepository.save(user);
   }
 
   findAll() {
-    return `This action returns all users`;
+    const userRepository = getCustomRepository(UserRepository);
+    return userRepository.getAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const userRepository = getCustomRepository(UserRepository);
+    const user = await userRepository.getById(id);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const userRepository = getCustomRepository(UserRepository);
+    const user = await userRepository.getById(id);
+    if (!user) throw new NotFoundException('User not found');
+
+    return userRepository.save({ ...user, ...updateUserDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const userRepository = getCustomRepository(UserRepository);
+    const userDeletable = await userRepository.getById(id);
+    if (!userDeletable) throw new NotFoundException('User not found');
+
+    await userRepository.deleteById(id);
+
+    // const taskRepository = getCustomRepository(TaskRepository);
+    // await taskRepository.update({ userId: id }, { userId: null });
+
+    return userDeletable;
   }
 }
