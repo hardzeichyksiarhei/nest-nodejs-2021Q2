@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { getCustomRepository } from 'typeorm';
 
 import { Column } from '../columns/column.model';
 import { BoardRepository } from './board.repository';
@@ -9,32 +8,29 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardsService {
-  async create(createBoardDto: CreateBoardDto) {
-    const boardRepository = getCustomRepository(BoardRepository);
+  constructor(private readonly boardRepository: BoardRepository) {}
 
+  async create(createBoardDto: CreateBoardDto) {
     const columns = await Promise.all(
       createBoardDto.columns?.map(Column.create) || [],
     );
     const boardCreatable = { ...createBoardDto, columns };
-    const board = boardRepository.create(boardCreatable);
-    return boardRepository.save(board);
+    const board = this.boardRepository.create(boardCreatable);
+    return this.boardRepository.save(board);
   }
 
   findAll() {
-    const boardRepository = getCustomRepository(BoardRepository);
-    return boardRepository.getAll();
+    return this.boardRepository.getAll();
   }
 
   async findOne(id: string) {
-    const boardRepository = getCustomRepository(BoardRepository);
-    const board = await boardRepository.getById(id);
+    const board = await this.boardRepository.getById(id);
     if (!board) throw new NotFoundException('Board not found');
     return board;
   }
 
   async update(id: string, updateBoardDto: UpdateBoardDto) {
-    const boardRepository = getCustomRepository(BoardRepository);
-    const board = await boardRepository.getById(id);
+    const board = await this.boardRepository.getById(id);
     if (!board) throw new NotFoundException('Board not found');
 
     const columns = await Promise.all(
@@ -42,16 +38,14 @@ export class BoardsService {
     );
 
     const boardUpdatable = { ...updateBoardDto, columns };
-    return boardRepository.save({ ...board, ...boardUpdatable });
+    return this.boardRepository.save({ ...board, ...boardUpdatable });
   }
 
   async remove(id: string) {
-    const boardRepository = getCustomRepository(BoardRepository);
-
-    const boardDeletable = await boardRepository.getById(id);
+    const boardDeletable = await this.boardRepository.getById(id);
     if (!boardDeletable) throw new NotFoundException('Board not found');
 
-    await boardRepository.deleteById(id);
+    await this.boardRepository.deleteById(id);
 
     // const taskRepository = getCustomRepository(TaskRepository);
     // await taskRepository.update({ boardId: id }, { boardId: null });
