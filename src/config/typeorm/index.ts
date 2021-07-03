@@ -3,6 +3,7 @@ import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConnectionOptions, createConnection } from 'typeorm';
 
 import { User } from '../../modules/users/user.entity';
+import { Board } from 'src/modules/boards/board.entity';
 
 import config from '../../config.orm';
 
@@ -19,7 +20,7 @@ export class TypeormService implements TypeOrmOptionsFactory {
       // ToDo: Delete
       synchronize: true,
 
-      entities: [User],
+      entities: [User, Board],
 
       // migrationsTableName: 'migrations',
       // migrations: [path.join(__dirname, '../../database/migrations/*.ts')],

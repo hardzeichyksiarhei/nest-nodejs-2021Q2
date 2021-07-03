@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { UsersModule } from './modules/users/users.module';
+import { BoardsModule } from './modules/boards/boards.module';
 
 import { TypeormService } from './config';
 
@@ -14,6 +15,7 @@ import { TypeormService } from './config';
       useClass: TypeormService,
     }),
     UsersModule,
+    BoardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
