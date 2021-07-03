@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { getCustomRepository } from 'typeorm';
 
@@ -30,6 +31,10 @@ export class UsersService {
     const userRepository = getCustomRepository(UserRepository);
     const user = await userRepository.getById(id);
     if (!user) throw new NotFoundException('User not found');
+
+    if (updateUserDto.password) {
+      updateUserDto.password = bcrypt.hashSync(updateUserDto.password, 10);
+    }
 
     return userRepository.save({ ...user, ...updateUserDto });
   }
