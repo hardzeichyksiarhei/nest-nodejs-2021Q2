@@ -1,50 +1,45 @@
 import * as bcrypt from 'bcrypt';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { getCustomRepository } from 'typeorm';
-
-import { UserRepository } from './user.repository';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly userRepository: UserRepository) {}
+
   create(createUserDto: CreateUserDto) {
-    const userRepository = getCustomRepository(UserRepository);
-    const user = userRepository.create(createUserDto);
-    return userRepository.save(user);
+    const user = this.userRepository.create(createUserDto);
+    return this.userRepository.save(user);
   }
 
   findAll() {
-    const userRepository = getCustomRepository(UserRepository);
-    return userRepository.getAll();
+    return this.userRepository.getAll();
   }
 
   async findOne(id: string) {
-    const userRepository = getCustomRepository(UserRepository);
-    const user = await userRepository.getById(id);
+    const user = await this.userRepository.getById(id);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const userRepository = getCustomRepository(UserRepository);
-    const user = await userRepository.getById(id);
+    const user = await this.userRepository.getById(id);
     if (!user) throw new NotFoundException('User not found');
 
     if (updateUserDto.password) {
       updateUserDto.password = bcrypt.hashSync(updateUserDto.password, 10);
     }
 
-    return userRepository.save({ ...user, ...updateUserDto });
+    return this.userRepository.save({ ...user, ...updateUserDto });
   }
 
   async remove(id: string) {
-    const userRepository = getCustomRepository(UserRepository);
-    const userDeletable = await userRepository.getById(id);
+    const userDeletable = await this.userRepository.getById(id);
     if (!userDeletable) throw new NotFoundException('User not found');
 
-    await userRepository.deleteById(id);
+    await this.userRepository.deleteById(id);
 
     // const taskRepository = getCustomRepository(TaskRepository);
     // await taskRepository.update({ userId: id }, { userId: null });
