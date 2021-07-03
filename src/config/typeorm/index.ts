@@ -1,7 +1,8 @@
-import * as path from 'path';
 import { Injectable } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConnectionOptions, createConnection } from 'typeorm';
+
+import { User } from '../../modules/users/user.entity';
 
 import config from '../../config.orm';
 
@@ -18,7 +19,7 @@ export class TypeormService implements TypeOrmOptionsFactory {
       // ToDo: Delete
       synchronize: true,
 
-      entities: [path.join(__dirname, '../../modules/**/*.entity.ts')],
+      entities: [User],
 
       // migrationsTableName: 'migrations',
       // migrations: [path.join(__dirname, '../../database/migrations/*.ts')],
