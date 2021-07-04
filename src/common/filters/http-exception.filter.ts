@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
 } from '@nestjs/common';
+import { isObject } from 'class-validator';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
@@ -13,11 +14,18 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
     const request = ctx.getRequest();
     const statusCode = exception.getStatus();
 
-    response.status(statusCode).send({
+    const baseResponse = {
       statusCode,
-      message: exception.message || '',
-      timestamp: new Date().toISOString(),
+      message: exception.message,
       path: request.url,
-    });
+      timestamp: new Date().toISOString(),
+    };
+
+    const exceptionResponse = exception.getResponse();
+    const resultResponse = isObject(exceptionResponse)
+      ? { ...baseResponse, ...exceptionResponse }
+      : { ...baseResponse };
+
+    response.status(statusCode).send(resultResponse);
   }
 }

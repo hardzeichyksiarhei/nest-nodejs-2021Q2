@@ -4,7 +4,11 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 
 import { AppModule } from './app.module';
 
@@ -24,6 +28,7 @@ async function bootstrap() {
       },
     );
 
+    app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new HttpExceptionFilter());
 
     await app.listen(PORT);
