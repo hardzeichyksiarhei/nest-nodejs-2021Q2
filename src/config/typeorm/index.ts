@@ -4,6 +4,7 @@ import { ConnectionOptions, createConnection } from 'typeorm';
 
 import { User } from '../../modules/users/user.entity';
 import { Board } from 'src/modules/boards/board.entity';
+import { Task } from 'src/modules/tasks/task.entity';
 
 import config from '../../config.orm';
 
@@ -20,7 +21,7 @@ export class TypeormService implements TypeOrmOptionsFactory {
       // ToDo: Delete
       synchronize: true,
 
-      entities: [User, Board],
+      entities: [User, Board, Task],
 
       // migrationsTableName: 'migrations',
       // migrations: [path.join(__dirname, '../../database/migrations/*.ts')],
