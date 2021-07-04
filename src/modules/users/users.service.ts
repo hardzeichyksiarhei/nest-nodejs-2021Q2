@@ -1,13 +1,18 @@
 import * as bcrypt from 'bcrypt';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { UserRepository } from './user.repository';
+import { TaskRepository } from '../tasks/task.repository';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly taskRepository: TaskRepository,
+  ) {}
 
   create(createUserDto: CreateUserDto) {
     const user = this.userRepository.create(createUserDto);
@@ -41,8 +46,7 @@ export class UsersService {
 
     await this.userRepository.deleteById(id);
 
-    // const taskRepository = getCustomRepository(TaskRepository);
-    // await taskRepository.update({ userId: id }, { userId: null });
+    await this.taskRepository.update({ userId: id }, { userId: null });
 
     return userDeletable;
   }

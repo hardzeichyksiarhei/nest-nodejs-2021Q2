@@ -2,13 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Column } from '../columns/column.model';
 import { BoardRepository } from './board.repository';
+import { TaskRepository } from '../tasks/task.repository';
 
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardsService {
-  constructor(private readonly boardRepository: BoardRepository) {}
+  constructor(
+    private readonly boardRepository: BoardRepository,
+    private readonly taskRepository: TaskRepository,
+  ) {}
 
   async create(createBoardDto: CreateBoardDto) {
     const columns = await Promise.all(
@@ -47,8 +51,7 @@ export class BoardsService {
 
     await this.boardRepository.deleteById(id);
 
-    // const taskRepository = getCustomRepository(TaskRepository);
-    // await taskRepository.update({ boardId: id }, { boardId: null });
+    await this.taskRepository.update({ boardId: id }, { boardId: null });
 
     return boardDeletable;
   }
