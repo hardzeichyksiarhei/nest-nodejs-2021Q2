@@ -7,8 +7,11 @@ import {
   Delete,
   Put,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes } from 'http-status-codes';
+
 import { UsersService } from './users.service';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +20,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 
 @Controller('users')
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

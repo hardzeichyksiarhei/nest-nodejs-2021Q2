@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { AuthModule } from './auth/auth.module';
+
 import { UsersModule } from './modules/users/users.module';
 import { BoardsModule } from './modules/boards/boards.module';
 import { TasksModule } from './modules/tasks/tasks.module';
@@ -17,6 +19,7 @@ import { TypeormService } from './config';
     TypeOrmModule.forRootAsync({
       useClass: TypeormService,
     }),
+    AuthModule,
     UsersModule,
     BoardsModule,
     TasksModule,
@@ -32,6 +35,8 @@ import { TypeormService } from './config';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('users', 'boards', 'tasks');
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('login', 'users', 'boards', 'tasks');
   }
 }

@@ -7,8 +7,11 @@ import {
   Param,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes } from 'http-status-codes';
+
 import { TasksService } from './tasks.service';
 
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -17,6 +20,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './task.entity';
 
 @Controller('boards/:boardId/tasks')
+@UseGuards(AuthGuard('jwt'))
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 

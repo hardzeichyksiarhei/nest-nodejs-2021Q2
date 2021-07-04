@@ -13,7 +13,7 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
     const request = ctx.getRequest();
     const statusCode = exception.getStatus();
 
-    response.status(statusCode).json({
+    response.status(statusCode).send({
       statusCode,
       message: exception.message || '',
       timestamp: new Date().toISOString(),
