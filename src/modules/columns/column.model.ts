@@ -4,7 +4,9 @@ import { IColumn, IBaseColumn } from './column.interface';
 
 export class Column implements IColumn {
   id: string;
+
   title: string;
+
   order: number;
 
   constructor({

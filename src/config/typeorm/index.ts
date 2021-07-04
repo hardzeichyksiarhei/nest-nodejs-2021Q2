@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConnectionOptions, createConnection } from 'typeorm';
 
@@ -31,12 +31,10 @@ export class TypeormService implements TypeOrmOptionsFactory {
   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
     createConnection(options)
       .then(() => {
-        console.info('☁️  Database connected');
-        // console.log(`☁️  Database connected`, 'TypeORM', false);
+        Logger.log(`☁️  Database connected`, 'TypeORM', false);
       })
       .catch(() => {
-        console.error('❌  Database connect error');
-        // console.error(`❌  Database connect error`, '', 'TypeORM', false);
+        Logger.error(`❌  Database connect error`, '', 'TypeORM', false);
       });
 
     return options;

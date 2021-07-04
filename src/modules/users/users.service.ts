@@ -33,11 +33,12 @@ export class UsersService {
     const user = await this.userRepository.getById(id);
     if (!user) throw new NotFoundException('User not found');
 
+    const userUpdatable = updateUserDto;
     if (updateUserDto.password) {
-      updateUserDto.password = bcrypt.hashSync(updateUserDto.password, 10);
+      userUpdatable.password = bcrypt.hashSync(updateUserDto.password, 10);
     }
 
-    return this.userRepository.save({ ...user, ...updateUserDto });
+    return this.userRepository.save({ ...user, ...userUpdatable });
   }
 
   async remove(id: string) {
