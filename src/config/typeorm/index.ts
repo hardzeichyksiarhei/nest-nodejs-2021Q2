@@ -3,6 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConnectionOptions, createConnection } from 'typeorm';
 
+import { User } from '../../modules/users/user.entity';
+import { Board } from '../../modules/boards/board.entity';
+import { Task } from '../../modules/tasks/task.entity';
+
 import config from '../../config.orm';
 
 const options: ConnectionOptions = {
@@ -12,7 +16,7 @@ const options: ConnectionOptions = {
   reconnectTries: Number.MAX_VALUE,
   reconnectionInterval: 1000,
 
-  entities: [path.join(__dirname, '../../**/*.entity.ts')],
+  entities: [User, Board, Task],
 
   migrationsTableName: 'migrations',
   migrations: [path.join(__dirname, '../../../database/migrations/*.ts')],
