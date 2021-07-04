@@ -1,14 +1,17 @@
+import * as fs from 'fs';
 import * as chalk from 'chalk';
+import * as YAML from 'yamljs';
 import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
 import {
   InternalServerErrorException,
   Logger,
   ValidationPipe,
 } from '@nestjs/common';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
@@ -27,6 +30,16 @@ async function bootstrap() {
         logger: new AppLogger(),
       },
     );
+
+    const config = new DocumentBuilder()
+      .setTitle('Nest NodeJS 2021Q2')
+      .setDescription('NestJS, TypeORM, PostgresDB')
+      .setVersion('1.0')
+      .addTag('nest')
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    fs.writeFileSync('doc/api.yaml', YAML.stringify(document, 10, 2));
+    SwaggerModule.setup('doc', app, document);
 
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new HttpExceptionFilter());

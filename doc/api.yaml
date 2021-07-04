@@ -1,0 +1,255 @@
+openapi: 3.0.0
+info:
+  title: 'Nest NodeJS 2021Q2'
+  description: 'NestJS, TypeORM, PostgresDB'
+  version: '1.0'
+  contact: {}
+tags:
+  -
+    name: nest
+    description: ""
+servers: []
+components:
+  schemas:
+    CreateUserDto:
+      type: object
+      properties: {}
+    UpdateUserDto:
+      type: object
+      properties: {}
+    CreateBoardDto:
+      type: object
+      properties: {}
+    UpdateBoardDto:
+      type: object
+      properties: {}
+    CreateTaskDto:
+      type: object
+      properties: {}
+    UpdateTaskDto:
+      type: object
+      properties: {}
+paths:
+  /login:
+    post:
+      operationId: AppController_login
+      parameters: []
+      responses:
+        '201':
+          description: ""
+  /users:
+    post:
+      operationId: UsersController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ""
+    get:
+      operationId: UsersController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: ""
+  '/users/{id}':
+    get:
+      operationId: UsersController_findOne
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ""
+    put:
+      operationId: UsersController_update
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: ""
+    delete:
+      operationId: UsersController_remove
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ""
+  /boards:
+    post:
+      operationId: BoardsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBoardDto'
+      responses:
+        '201':
+          description: ""
+    get:
+      operationId: BoardsController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: ""
+  '/boards/{id}':
+    get:
+      operationId: BoardsController_findOne
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ""
+    put:
+      operationId: BoardsController_update
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBoardDto'
+      responses:
+        '200':
+          description: ""
+    delete:
+      operationId: BoardsController_remove
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ""
+  '/boards/{boardId}/tasks':
+    post:
+      operationId: TasksController_create
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskDto'
+      responses:
+        '201':
+          description: ""
+    get:
+      operationId: TasksController_findAllByBoardId
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ""
+  '/boards/{boardId}/tasks/{id}':
+    get:
+      operationId: TasksController_findOneByBoardIdAndTaskId
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ""
+    put:
+      operationId: TasksController_updateByBoardIdAndTaskId
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskDto'
+      responses:
+        '200':
+          description: ""
+    delete:
+      operationId: TasksController_removeByBoardIdAndTaskId
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ""
