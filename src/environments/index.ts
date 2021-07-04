@@ -1,9 +1,6 @@
 import * as dotenv from 'dotenv';
-import * as path from 'path';
 
-dotenv.config({
-  path: path.join(__dirname, '../../.env'),
-});
+dotenv.config();
 
 // environment
 const NODE_ENV: string = process.env.NODE_ENV || 'development';
@@ -13,6 +10,7 @@ const AUTHOR: string = process.env.AUTHOR || 'hardz';
 
 // application
 const PORT: number = parseInt(process.env.PORT, 10) || 4000;
+const USE_FASTIFY: boolean = process.env.USE_FASTIFY === 'true';
 
 // jsonwebtoken
 const JWT_SECRET_KEY: string = process.env.JWT_SECRET_KEY || 'secret-key';
@@ -31,6 +29,7 @@ export {
   NODE_ENV,
   AUTHOR,
   PORT,
+  USE_FASTIFY,
   JWT_SECRET_KEY,
   AUTH_MODE,
   POSTGRES_HOST,

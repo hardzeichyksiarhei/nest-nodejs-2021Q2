@@ -19,17 +19,22 @@ import { AppLogger } from './config/logger';
 
 import { HttpExceptionFilter } from './common';
 
-import { PORT } from './environments';
+import { PORT, USE_FASTIFY } from './environments';
+
+const createApp = async (useFastify = false) => {
+  if (useFastify) {
+    return NestFactory.create<NestFastifyApplication>(
+      AppModule,
+      new FastifyAdapter(),
+      { logger: new AppLogger() },
+    );
+  }
+  return NestFactory.create(AppModule, { logger: new AppLogger() });
+};
 
 async function bootstrap() {
   try {
-    const app = await NestFactory.create<NestFastifyApplication>(
-      AppModule,
-      new FastifyAdapter(),
-      {
-        logger: new AppLogger(),
-      },
-    );
+    const app = await createApp(USE_FASTIFY);
 
     const config = new DocumentBuilder()
       .setTitle('Nest NodeJS 2021Q2')
@@ -48,7 +53,7 @@ async function bootstrap() {
 
     Logger.log(
       `🚀 Server is listening on port ${chalk.hex('#87e8de').bold(`${PORT}`)}`,
-      'Bootstrap',
+      `Bootstrap (${!USE_FASTIFY ? 'Express' : 'Fastify'})`,
     );
   } catch (error) {
     Logger.error(`❌ Error starting server, ${error}`, '', 'Bootstrap', false);
