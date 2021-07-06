@@ -1,4 +1,3 @@
-// import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -41,6 +40,7 @@ import { HTTP_ADAPTER } from './environments';
   controllers: [AppController],
   providers: [
     AppService,
+    // Alternative way of logging
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: LoggerInterceptor,

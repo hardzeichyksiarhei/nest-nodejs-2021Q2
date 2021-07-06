@@ -13,20 +13,20 @@ export class FastifyLoggerMiddleware implements NestMiddleware {
     const start = Date.now();
     const body: Uint8Array[] = [];
 
-    req
-      .on('data', (payload) => {
-        body.push(Buffer.from(payload));
-      })
-      .on('end', () => {
-        if (res.statusCode < 400) {
-          const message = this.getLoggerInfo(body, start)(req, res);
-          this.logger.info(message);
-        }
-        if (res.statusCode >= 400) {
-          const message = this.getLoggerError(body, start)(req, res);
-          this.logger.error(message);
-        }
-      });
+    req.on('data', (payload) => {
+      body.push(Buffer.from(payload));
+    });
+
+    res.on('close', () => {
+      if (res.statusCode < 400) {
+        const message = this.getLoggerInfo(body, start)(req, res);
+        this.logger.info(message);
+      }
+      if (res.statusCode >= 400) {
+        const message = this.getLoggerError(body, start)(req, res);
+        this.logger.error(message);
+      }
+    });
 
     next();
   }
@@ -43,15 +43,18 @@ export class FastifyLoggerMiddleware implements NestMiddleware {
         `URL: ${req.url}`,
         `Code: ${res.statusCode}`,
         `Time: ${Date.now() - startTime}ms`,
-        // `Params: ${JSON.stringify(req.params)}`,
+        // `Params: ${JSON.stringify(req.params}`,
         `Body: ${Buffer.concat(body).toString() || '{}'}`,
-        // `Response: ${JSON.stringify(payload)}`,
         '',
       ].join(separator);
   }
 
-  getLoggerError(body: Uint8Array[], startTime: number) {
+  getLoggerError(
+    body: Uint8Array[],
+    startTime: number,
+    separator: string = '\n',
+  ) {
     return (req: IncomingMessage, res: ServerResponse) =>
-      this.getLoggerInfo(body, startTime)(req, res);
+      this.getLoggerInfo(body, startTime, separator)(req, res);
   }
 }
