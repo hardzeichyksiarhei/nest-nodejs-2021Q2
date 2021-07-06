@@ -11,6 +11,7 @@ const AUTHOR: string = process.env.AUTHOR || 'hardz';
 // application
 const PORT: number = parseInt(process.env.PORT, 10) || 4000;
 const USE_FASTIFY: boolean = process.env.USE_FASTIFY === 'true';
+const HTTP_ADAPTER: string = USE_FASTIFY ? 'fastify' : 'express';
 
 // jsonwebtoken
 const JWT_SECRET_KEY: string = process.env.JWT_SECRET_KEY || 'secret-key';
@@ -30,6 +31,7 @@ export {
   AUTHOR,
   PORT,
   USE_FASTIFY,
+  HTTP_ADAPTER,
   JWT_SECRET_KEY,
   AUTH_MODE,
   POSTGRES_HOST,

@@ -1,3 +1,3 @@
-import { LoggingInterceptor } from './logging.interceptor';
+import { LoggerInterceptor } from './logger.interceptor';
 
-export { LoggingInterceptor };
+export { LoggerInterceptor };

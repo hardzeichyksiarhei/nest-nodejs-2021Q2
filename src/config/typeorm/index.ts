@@ -27,7 +27,7 @@ const options: ConnectionOptions = {
 };
 
 @Injectable()
-export class TypeormService implements TypeOrmOptionsFactory {
+export class TypeormConfigService implements TypeOrmOptionsFactory {
   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
     createConnection(options)
       .then(() => {
