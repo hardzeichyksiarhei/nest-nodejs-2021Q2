@@ -3,10 +3,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConnectionOptions, createConnection } from 'typeorm';
 
-import { User } from '../../modules/users/user.entity';
-import { Board } from '../../modules/boards/board.entity';
-import { Task } from '../../modules/tasks/task.entity';
-
 import config from '../../config.orm';
 
 const options: ConnectionOptions = {
@@ -16,14 +12,15 @@ const options: ConnectionOptions = {
   reconnectTries: Number.MAX_VALUE,
   reconnectionInterval: 1000,
 
-  entities: [User, Board, Task],
+  entities: [path.join(__dirname, '../../modules/**/*.entity.{ts,js}')],
 
   migrationsTableName: 'migrations',
-  migrations: [path.join(__dirname, '../../../database/migrations/*.ts')],
-  cli: { migrationsDir: 'src/migrations' },
+  migrations: [path.join(__dirname, '../../database/migrations/*.{ts,js}')],
 
-  seeds: [path.join(__dirname, '../../../database/seeds/*.ts')],
-  factories: [path.join(__dirname, '../../../database/factories/*.ts')],
+  seeds: [path.join(__dirname, '../../database/seeds/*.{ts,js}')],
+  factories: [path.join(__dirname, '../../database/factories/*.{ts,js}')],
+
+  cli: { entitiesDir: 'src/models', migrationsDir: 'src/migrations' },
 };
 
 @Injectable()

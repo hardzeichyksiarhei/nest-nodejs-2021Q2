@@ -1,7 +1,7 @@
 import { getCustomRepository } from 'typeorm';
 import { define } from 'typeorm-seeding';
-import { User } from '../../src/modules/users/user.entity';
-import { UserRepository } from '../../src/modules/users/user.repository';
+import { User } from '../../modules/users/user.entity';
+import { UserRepository } from '../../modules/users/user.repository';
 
 define(User, () => {
   const user = {

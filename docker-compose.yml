@@ -4,8 +4,7 @@ services:
   node:
     build:
       context: .
-      target: development
-      dockerfile: ./Dockerfile
+      target: builder
     command: npm run start:dev
     ports:
       - ${PORT}:${PORT}
@@ -18,7 +17,7 @@ services:
       - app-bridge
 
   postgres:
-    build: ./database/
+    build: ./src/database
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
