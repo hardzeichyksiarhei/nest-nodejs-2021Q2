@@ -18,7 +18,7 @@ import { AppModule } from './app.module';
 
 import { AppLogger } from './config/logger';
 
-import { PORT, HTTP_ADAPTER } from './environments';
+import { PORT, HTTP_ADAPTER, NODE_ENV } from './environments';
 
 const createApp = async (httpAdapter = 'express') => {
   if (httpAdapter === 'fastify') {
@@ -38,15 +38,17 @@ async function bootstrap() {
   try {
     const app = await createApp(HTTP_ADAPTER);
 
-    const config = new DocumentBuilder()
-      .setTitle('Nest NodeJS 2021Q2')
-      .setDescription('NestJS, TypeORM, PostgresDB')
-      .setVersion('1.0')
-      .addTag('nest')
-      .build();
-    const document = SwaggerModule.createDocument(app, config);
-    fs.writeFileSync('doc/api.yaml', YAML.stringify(document, 10, 2));
-    SwaggerModule.setup('doc', app, document);
+    if (NODE_ENV === 'development') {
+      const config = new DocumentBuilder()
+        .setTitle('Nest NodeJS 2021Q2')
+        .setDescription('NestJS, TypeORM, PostgresDB')
+        .setVersion('1.0')
+        .addTag('nest')
+        .build();
+      const document = SwaggerModule.createDocument(app, config);
+      fs.writeFileSync('doc/api.yaml', YAML.stringify(document, 10, 2));
+      SwaggerModule.setup('doc', app, document);
+    }
 
     // httpAdapter === 'express'
     if (HTTP_ADAPTER === 'express') {

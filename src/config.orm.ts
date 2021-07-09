@@ -17,7 +17,13 @@ const orm = {
   },
   testing: {},
   staging: {},
-  production: {},
+  production: {
+    host: POSTGRES_HOST,
+    port: POSTGRES_PORT,
+    username: POSTGRES_USER,
+    password: POSTGRES_PASSWORD,
+    database: POSTGRES_DB,
+  },
 };
 
 export default orm[NODE_ENV];
