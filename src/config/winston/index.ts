@@ -5,12 +5,28 @@ import {
 } from 'nest-winston';
 import { transports, format } from 'winston';
 
-// import { NODE_ENV } from '../../environments';
+import { NODE_ENV } from '../../environments';
 
 @Injectable()
 export class WinstonConfigService implements WinstonModuleOptionsFactory {
   async createWinstonModuleOptions(): Promise<WinstonModuleOptions> {
-    const options = {
+    const TRANSPORTS: (
+      | transports.FileTransportInstance
+      | transports.ConsoleTransportInstance
+    )[] = [
+      new transports.File({ filename: 'logs/errors.log', level: 'error' }),
+      new transports.File({
+        filename: 'logs/all.log',
+        maxsize: 5242880,
+        level: 'info',
+      }),
+    ];
+
+    if (NODE_ENV !== 'production') {
+      TRANSPORTS.push(new transports.Console());
+    }
+
+    const OPRIONS = {
       format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.printf(
@@ -18,20 +34,9 @@ export class WinstonConfigService implements WinstonModuleOptionsFactory {
             `${timestamp} ${level}: ${message}`,
         ),
       ),
-      transports: [
-        new transports.File({ filename: 'logs/errors.log', level: 'error' }),
-        new transports.File({
-          filename: 'logs/all.log',
-          maxsize: 5242880,
-          level: 'info',
-        }),
-      ],
+      transports: TRANSPORTS,
     };
 
-    return options;
+    return OPRIONS;
   }
 }
-
-// if (NODE_ENV !== 'production') {
-//   logger.add(new transports.Console());
-// }
