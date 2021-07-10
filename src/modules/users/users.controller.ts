@@ -30,7 +30,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.CREATED,
     description: 'The found record',
     type: ResponseUserDto,
   })
@@ -43,7 +43,7 @@ export class UsersController {
   }
 
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'The found records',
     type: [ResponseUserDto],
   })
@@ -55,7 +55,7 @@ export class UsersController {
   }
 
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'The found record',
     type: ResponseUserDto,
   })
@@ -67,7 +67,7 @@ export class UsersController {
   }
 
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'The updated record',
     type: ResponseUserDto,
   })
@@ -79,7 +79,7 @@ export class UsersController {
   }
 
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'The deleted record',
     type: ResponseUserDto,
   })
