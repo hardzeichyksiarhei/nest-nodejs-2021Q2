@@ -30,6 +30,13 @@ components:
       type: object
       properties: {}
 paths:
+  /:
+    get:
+      operationId: AppController_root
+      parameters: []
+      responses:
+        '200':
+          description: ""
   /login:
     post:
       operationId: AppController_login
