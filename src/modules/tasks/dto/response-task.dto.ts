@@ -7,7 +7,11 @@ import {
   IsOptional,
 } from 'class-validator';
 
-export class CreateTaskDto {
+export class ResponseTaskDto {
+  @ApiProperty()
+  @IsUUID(4)
+  id: string;
+
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

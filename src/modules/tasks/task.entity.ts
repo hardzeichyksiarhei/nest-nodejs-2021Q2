@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { ResponseTaskDto } from './dto/response-task.dto';
 
 @Entity({ name: 'tasks' })
 export class Task {
@@ -23,7 +24,7 @@ export class Task {
   @Column('varchar', { length: 36, nullable: true })
   columnId!: string | null;
 
-  static toResponse(task: Task) {
+  static toResponse(task: ResponseTaskDto) {
     return task;
   }
 }

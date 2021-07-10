@@ -8,23 +8,34 @@ import {
   Delete,
   HttpCode,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { StatusCodes } from 'http-status-codes';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { TasksService } from './tasks.service';
 
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { ResponseTaskDto } from './dto/response-task.dto';
 
 import { Task } from './task.entity';
 
-@Controller('boards/:boardId/tasks')
+@ApiResponse({ status: 401, description: 'Unauthorized' })
+@ApiResponse({ status: 403, description: 'Forbidden' })
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
+@Controller('boards/:boardId/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @HttpCode(StatusCodes.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The found record',
+    type: ResponseTaskDto,
+  })
+  @ApiOperation({ summary: 'Create one Task 👻' })
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
     @Param('boardId') boardId: string,
@@ -34,12 +45,24 @@ export class TasksController {
     return Task.toResponse(task);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The found records',
+    type: [ResponseTaskDto],
+  })
+  @ApiOperation({ summary: 'Retrieve many Tasks 👻' })
   @Get()
   async findAllByBoardId(@Param('boardId') boardId: string) {
     const tasks = await this.tasksService.findAllByBoardId(boardId);
     return tasks.map(Task.toResponse);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The found record',
+    type: ResponseTaskDto,
+  })
+  @ApiOperation({ summary: 'Retrieve one Task 👻' })
   @Get(':id')
   async findOneByBoardIdAndTaskId(
     @Param('boardId') boardId: string,
@@ -52,6 +75,12 @@ export class TasksController {
     return Task.toResponse(task);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The updated record',
+    type: ResponseTaskDto,
+  })
+  @ApiOperation({ summary: 'Update one Task 👻' })
   @Put(':id')
   async updateByBoardIdAndTaskId(
     @Param('boardId') boardId: string,
@@ -66,6 +95,12 @@ export class TasksController {
     return Task.toResponse(task);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The deleted record',
+    type: ResponseTaskDto,
+  })
+  @ApiOperation({ summary: 'Delete one Task 👻' })
   @Delete(':id')
   async removeByBoardIdAndTaskId(
     @Param('boardId') boardId: string,
