@@ -20,6 +20,7 @@ import {
   ExpressLoggerMiddleware,
   FastifyLoggerMiddleware,
   HttpExceptionFilter,
+  AllExceptionsFilter,
 } from './common';
 import { TypeormConfigService, WinstonConfigService } from './config';
 import { HTTP_ADAPTER } from './environments';
@@ -45,6 +46,10 @@ import { HTTP_ADAPTER } from './environments';
     //   provide: APP_INTERCEPTOR,
     //   useClass: LoggerInterceptor,
     // },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,

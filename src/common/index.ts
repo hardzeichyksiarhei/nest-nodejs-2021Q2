@@ -1,3 +1,3 @@
-export * from './filters/http-exception.filter';
+export * from './filters';
 export * from './interceptors';
 export * from './middlewares';
