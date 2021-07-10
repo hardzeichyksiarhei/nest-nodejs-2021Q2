@@ -21,8 +21,8 @@ import { ResponseBoardDto } from './dto/response-board.dto';
 
 import { Board } from './board.entity';
 
-@ApiResponse({ status: 401, description: 'Unauthorized' })
-@ApiResponse({ status: 403, description: 'Forbidden' })
+@ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+@ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden' })
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller('boards')
