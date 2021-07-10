@@ -18,6 +18,7 @@ export class LoggerInterceptor implements NestInterceptor {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
+  // Used "Observable<any>" as in the documentation
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const start = Date.now();
 
