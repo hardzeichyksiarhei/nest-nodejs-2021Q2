@@ -14,6 +14,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 
 import { AppLogger } from './config/logger';
@@ -29,7 +30,9 @@ const createApp = async (httpAdapter = 'express') => {
     );
   }
   if (httpAdapter === 'express') {
-    return NestFactory.create(AppModule, { logger: new AppLogger() });
+    return NestFactory.create<NestExpressApplication>(AppModule, {
+      logger: new AppLogger(),
+    });
   }
   throw new InternalServerErrorException();
 };
@@ -59,7 +62,7 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
 
-    await app.listen(PORT);
+    await app.listen(PORT, '0.0.0.0');
 
     Logger.log(
       `🚀 Server is listening on port ${chalk.hex('#87e8de').bold(`${PORT}`)}`,
