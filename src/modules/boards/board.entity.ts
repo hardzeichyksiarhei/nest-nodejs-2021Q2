@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 import { Column as BoardColumn } from '../columns/column.model';
+import { ResponseBoardDto } from './dto/response-board.dto';
 
 @Entity({ name: 'boards' })
 export class Board {
@@ -13,7 +14,7 @@ export class Board {
   @Column('jsonb')
   columns: BoardColumn[] = [];
 
-  static toResponse(board: Board) {
+  static toResponse(board: ResponseBoardDto) {
     return board;
   }
 }
