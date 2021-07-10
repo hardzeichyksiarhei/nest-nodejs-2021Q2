@@ -55,9 +55,7 @@ async function bootstrap() {
 
     // httpAdapter === 'express'
     if (HTTP_ADAPTER === 'express') {
-      // body parser
       app.use(express.json());
-      app.use(express.urlencoded());
     }
 
     app.useGlobalPipes(new ValidationPipe());
