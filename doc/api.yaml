@@ -13,19 +13,122 @@ components:
   schemas:
     CreateUserDto:
       type: object
-      properties: {}
+      properties:
+        name:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+          minimum: 6
+      required:
+        - name
+        - login
+        - password
+    ResponseUserDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        login:
+          type: string
+      required:
+        - id
+        - name
+        - login
     UpdateUserDto:
       type: object
       properties: {}
     CreateBoardDto:
       type: object
-      properties: {}
+      properties:
+        title:
+          type: string
+        columns:
+          type: array
+          items:
+            type: string
+      required:
+        - title
+        - columns
+    Column:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        order:
+          type: number
+      required:
+        - id
+        - title
+        - order
+    ResponseBoardDto:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        columns:
+          $ref: '#/components/schemas/Column'
+      required:
+        - id
+        - title
+        - columns
     UpdateBoardDto:
       type: object
       properties: {}
     CreateTaskDto:
       type: object
-      properties: {}
+      properties:
+        title:
+          type: string
+        order:
+          type: number
+        description:
+          type: string
+        userId:
+          type: string
+        boardId:
+          type: string
+        columnId:
+          type: string
+      required:
+        - title
+        - order
+        - description
+        - userId
+        - boardId
+        - columnId
+    ResponseTaskDto:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        order:
+          type: number
+        description:
+          type: string
+        userId:
+          type: string
+        boardId:
+          type: string
+        columnId:
+          type: string
+      required:
+        - id
+        - title
+        - order
+        - description
+        - userId
+        - boardId
+        - columnId
     UpdateTaskDto:
       type: object
       properties: {}
@@ -47,6 +150,7 @@ paths:
   /users:
     post:
       operationId: UsersController_create
+      summary: 'Create one User 👻'
       parameters: []
       requestBody:
         required: true
@@ -56,16 +160,42 @@ paths:
               $ref: '#/components/schemas/CreateUserDto'
       responses:
         '201':
-          description: ""
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     get:
       operationId: UsersController_findAll
+      summary: 'Retrieve many Users 👻'
       parameters: []
       responses:
         '200':
-          description: ""
+          description: 'The found records'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
   '/users/{id}':
     get:
       operationId: UsersController_findOne
+      summary: 'Retrieve one User 👻'
       parameters:
         -
           name: id
@@ -75,9 +205,21 @@ paths:
             type: string
       responses:
         '200':
-          description: ""
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     put:
       operationId: UsersController_update
+      summary: 'Update one User 👻'
       parameters:
         -
           name: id
@@ -93,9 +235,21 @@ paths:
               $ref: '#/components/schemas/UpdateUserDto'
       responses:
         '200':
-          description: ""
+          description: 'The updated record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     delete:
       operationId: UsersController_remove
+      summary: 'Delete one User 👻'
       parameters:
         -
           name: id
@@ -105,10 +259,22 @@ paths:
             type: string
       responses:
         '200':
-          description: ""
+          description: 'The deleted record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
   /boards:
     post:
       operationId: BoardsController_create
+      summary: 'Create one Board 👻'
       parameters: []
       requestBody:
         required: true
@@ -118,16 +284,42 @@ paths:
               $ref: '#/components/schemas/CreateBoardDto'
       responses:
         '201':
-          description: ""
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     get:
       operationId: BoardsController_findAll
+      summary: 'Retrieve many Boards 👻'
       parameters: []
       responses:
         '200':
-          description: ""
+          description: 'The found records'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
   '/boards/{id}':
     get:
       operationId: BoardsController_findOne
+      summary: 'Retrieve one Board 👻'
       parameters:
         -
           name: id
@@ -137,9 +329,21 @@ paths:
             type: string
       responses:
         '200':
-          description: ""
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     put:
       operationId: BoardsController_update
+      summary: 'Update one Board 👻'
       parameters:
         -
           name: id
@@ -155,9 +359,21 @@ paths:
               $ref: '#/components/schemas/UpdateBoardDto'
       responses:
         '200':
-          description: ""
+          description: 'The updated record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     delete:
       operationId: BoardsController_remove
+      summary: 'Delete one Board 👻'
       parameters:
         -
           name: id
@@ -167,10 +383,22 @@ paths:
             type: string
       responses:
         '200':
-          description: ""
+          description: 'The deleted record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
   '/boards/{boardId}/tasks':
     post:
       operationId: TasksController_create
+      summary: 'Create one Task 👻'
       parameters:
         -
           name: boardId
@@ -186,9 +414,21 @@ paths:
               $ref: '#/components/schemas/CreateTaskDto'
       responses:
         '201':
-          description: ""
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     get:
       operationId: TasksController_findAllByBoardId
+      summary: 'Retrieve many Tasks 👻'
       parameters:
         -
           name: boardId
@@ -198,10 +438,24 @@ paths:
             type: string
       responses:
         '200':
-          description: ""
+          description: 'The found records'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
   '/boards/{boardId}/tasks/{id}':
     get:
       operationId: TasksController_findOneByBoardIdAndTaskId
+      summary: 'Retrieve one Task 👻'
       parameters:
         -
           name: boardId
@@ -217,9 +471,21 @@ paths:
             type: string
       responses:
         '200':
-          description: ""
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     put:
       operationId: TasksController_updateByBoardIdAndTaskId
+      summary: 'Update one Task 👻'
       parameters:
         -
           name: boardId
@@ -241,9 +507,21 @@ paths:
               $ref: '#/components/schemas/UpdateTaskDto'
       responses:
         '200':
-          description: ""
+          description: 'The updated record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
     delete:
       operationId: TasksController_removeByBoardIdAndTaskId
+      summary: 'Delete one Task 👻'
       parameters:
         -
           name: boardId
@@ -259,4 +537,15 @@ paths:
             type: string
       responses:
         '200':
-          description: ""
+          description: 'The deleted record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
