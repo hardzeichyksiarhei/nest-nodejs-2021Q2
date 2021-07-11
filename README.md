@@ -57,7 +57,7 @@ To run it in background, use `-d` flag
 To run cli commands, first make sure containers are running and use following command `docker exec -it <container_name> /bin/sh <command>`
 
 ## DB
-DB settings are stored in POSTGRES_* env variables. see [.env](https://github.com/hardzeichyksiarhei/basic-nodejs-2021Q2/blob/task7/postgresql-typeorm/.env) or [.env.docker](https://github.com/hardzeichyksiarhei/basic-nodejs-2021Q2/blob/task7/postgresql-typeorm/.env.docker).
+DB settings are stored in POSTGRES_* env variables. see [.env](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env) or [.env.docker](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env.docker).
 
 ## Migrations
 Running migrations:
