@@ -17,6 +17,8 @@ RUN npm install
 
 # Copy the source files
 COPY . .
+COPY ./.env.docker ./.env
+
 
 # Build the app
 RUN npm run build
@@ -33,7 +35,7 @@ ENV NODE_ENV=${NODE_ENV}
 COPY --from=builder /home/node/app/node_modules ./node_modules
 
 COPY --from=builder /home/node/app/package*.json ./
-COPY --from=builder /home/node/app/.env ./
+COPY --from=builder /home/node/app/.env ./.env
 COPY --from=builder /home/node/app/tsconfig*.json ./
 
 # Copy the tests
