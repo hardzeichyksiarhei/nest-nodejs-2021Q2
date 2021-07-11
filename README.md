@@ -59,7 +59,9 @@ To run cli commands, first make sure containers are running and use following co
 
 ## DB
 
-DB settings are stored in POSTGRES\_\* env variables. see [.env](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env) or [.env.docker](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env.docker).
+DB settings are stored in POSTGRES\_\* env variables. see [.env](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env).
+
+!!!WARNING!!! For local development use `POSTGRES_HOST=localhost`
 
 ## Migrations
 
