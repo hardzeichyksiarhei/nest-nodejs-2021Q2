@@ -5,68 +5,118 @@
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
+---
+
 ## Downloading
 
 ```
-git clone {repository URL}
+# Clone current repository
+$ git clone {repository URL}
+
+# Switch branch to [task9/nestjs]
+$ git checkout task9/nestjs
 ```
 
-## Installing NPM modules
+---
 
-```
-npm install
-```
+## Running application: Local
 
-## Running application
+```bash
+# Installing NPM modules
+$ npm install
 
-```
-npm start
-```
+# development mode
+$ npm run start
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+# watch mode
+$ npm run start:dev
 
-## Testing
-
-After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm test
+# production mode
+$ npm run start:prod
 ```
 
-To run only one of all test suites (users, boards or tasks)
+## Running application: Docker
+
+Run all services:
+
+```bash
+# development mode
+$ docker-compose up
+
+# production mode
+$ docker-compose -f docker-compose.prod.yml up
+```
+
+To run it in background, use `-d` flag
+
+#### Services:
+
+- postgresql 13.3-alpine on standard port
+- pgadmin 4.5.3 on port 5050
+- nest [express/fastify] on port 4000
+
+To run cli commands, first make sure containers are running and use following command `docker exec -it <container_name> /bin/sh <command>`
+
+## DB
+
+DB settings are stored in POSTGRES\_\* env variables. see [.env](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env).
+
+!!!WARNING!!! For local development use `POSTGRES_HOST=localhost`
+
+## Migrations
+
+Running migrations:
 
 ```
-npm test <suite name>
+$ npm run migration:run
 ```
 
-To run all test with authorization
+Revert migration:
 
 ```
-npm run test:auth
+$ npm run migration:revert
 ```
 
-To run only specific test suite with authorization (users, boards or tasks)
+## Seeding
+
+Running seeds:
 
 ```
+$ npm run seed:run
+```
+
+After starting the app on port (4000 as default) you can open in your browser OpenAPI documentation by typing http://localhost:4000/doc/. For more information about OpenAPI/Swagger please visit https://swagger.io/.
+
+---
+
+## Test
+
+```bash
+# To run all test with authorization
+$ npm run test:auth
+
+# To run only specific test suite with authorization (users, boards or tasks)
 npm run test:auth <suite name>
 ```
 
-## Development
+---
 
-If you're using VSCode, you can get a better developer experience from integration with [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions.
+# Express
 
-### Auto-fix and format
+| Title                        | Legend                       | Value               |
+| ---------------------------- | ---------------------------- | ------------------- |
+| Requests                     | [Completed]                  | 600                 |
+| Mean                         | [respsonse/sec]              | 6.03                |
+| Overall Latency Distribution | [min, max, median, p95, p99] | 2, 174, 47, 94, 134 |
+| Success                      | [ratio]                      | 100.00%             |
+| Status Codes                 | [code:count]                 | 200: 400; 201: 200  |
 
-```
-npm run lint
-```
+# Fastify
 
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+| Title                        | Legend                       | Value                |
+| ---------------------------- | ---------------------------- | -------------------- |
+| Requests                     | [Completed]                  | 600                  |
+| Mean                         | [respsonse/sec]              | 6.03                 |
+| Overall Latency Distribution | [min, max, median, p95, p99] | 1, 158, 40.5, 59, 63 |
+| Success                      | [ratio]                      | 100.00%              |
+| Status Codes                 | [code:count]                 | 200: 480; 201: 120   |

@@ -1,15 +1,31 @@
 openapi: 3.0.0
 info:
-  title: Trello Service
-  description: Let's try to create a competitor for Trello!
-  version: 1.0.0
-
-servers:
-  - url: /
-
+  title: 'Nest NodeJS 2021Q2'
+  description: 'NestJS, TypeORM, PostgresDB'
+  version: '1.0'
+  contact: {}
+tags:
+  -
+    name: nest
+    description: ""
+servers: []
 components:
   schemas:
-    User:
+    CreateUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+          minimum: 6
+      required:
+        - name
+        - login
+        - password
+    ResponseUserDto:
       type: object
       properties:
         id:
@@ -18,26 +34,78 @@ components:
           type: string
         login:
           type: string
-    Board:
+      required:
+        - id
+        - name
+        - login
+    UpdateUserDto:
+      type: object
+      properties: {}
+    CreateBoardDto:
+      type: object
+      properties:
+        title:
+          type: string
+        columns:
+          type: array
+          items:
+            type: string
+      required:
+        - title
+        - columns
+    Column:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        order:
+          type: number
+      required:
+        - id
+        - title
+        - order
+    ResponseBoardDto:
+      type: object
       properties:
         id:
           type: string
         title:
           type: string
         columns:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              title:
-                type: string
-              order:
-                type: integer
-    Task:
+          $ref: '#/components/schemas/Column'
+      required:
+        - id
+        - title
+        - columns
+    UpdateBoardDto:
+      type: object
+      properties: {}
+    CreateTaskDto:
+      type: object
+      properties:
+        title:
+          type: string
+        order:
+          type: number
+        description:
+          type: string
+        userId:
+          type: string
+        boardId:
+          type: string
+        columnId:
+          type: string
       required:
         - title
+        - order
+        - description
+        - userId
+        - boardId
+        - columnId
+    ResponseTaskDto:
+      type: object
       properties:
         id:
           type: string
@@ -49,480 +117,435 @@ components:
           type: string
         userId:
           type: string
-  responses:
-    UnauthorizedError:
-      description: Access token is missing or invalid
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
-security:
-  - bearerAuth: []
-
+        boardId:
+          type: string
+        columnId:
+          type: string
+      required:
+        - id
+        - title
+        - order
+        - description
+        - userId
+        - boardId
+        - columnId
+    UpdateTaskDto:
+      type: object
+      properties: {}
 paths:
-  /users:
+  /:
     get:
-      tags:
-        - Users
-      summary: Get all users
-      description: Gets all users (remove password from response)
+      operationId: AppController_root
+      parameters: []
       responses:
-        200:
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-    post:
-      tags:
-        - Users
-      summary: Create user
-      description: Creates a new user (remove password from response)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              title: example
-              properties:
-                name:
-                  type: string
-                  description: The user's name
-                login:
-                  type: string
-                  description: The user's login
-                password:
-                  type: string
-                  description: The user's password
-              required:
-                - name
-      responses:
-        201:
-          description: The user has been created.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        400:
-          description: Bad request
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-  /users/{userId}:
-    parameters:
-      - name: userId
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      tags:
-        - Users
-      summary: Get user by ID
-      description: Gets a user by ID
-        e.g. “/users/123” (remove password from response)
-      responses:
-        200:
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: User not found
-    put:
-      tags:
-        - Users
-      summary: Update a user
-      description: Updates a user by ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              title: example
-              properties:
-                name:
-                  type: string
-                  description: The user's name
-                login:
-                  type: string
-                  description: The user's login
-                password:
-                  type: string
-                  description: The user's password
-              required:
-                - name
-      responses:
-        200:
-          description: The user has been updated.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        400:
-          description: Bad request
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-    delete:
-      tags:
-        - Users
-      summary: Delete user
-      description: Deletes user by ID. When somebody
-        DELETE User, all Tasks where User is assignee
-        should be updated to put userId=null
-      responses:
-        204:
-          description: The user has been deleted
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: User not found
-  /boards:
-    get:
-      tags:
-        - Boards
-      summary: Get all boards
-      description: Returns all boards
-      responses:
-        200:
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Board"
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-    post:
-      tags:
-        - Boards
-      summary: Create board
-      description: Creates a new board
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              title: example
-              properties:
-                title:
-                  type: string
-                  description: The board's name
-                columns:
-                  type: array
-                  description: The board's column list
-                  items:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      order:
-                        type: integer
-                  required:
-                    - title
-                    - order
-              required:
-                - title
-                - columns
-      responses:
-        201:
-          description: The board has been created.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Board"
-        400:
-          description: Bad request
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-  /boards/{boardId}:
-    parameters:
-      - name: boardId
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      tags:
-        - Boards
-      summary: Get board by id
-      description: Gets the Board by ID (e.g. “/boards/123”)
-      responses:
-        200:
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Board"
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: Board not found
-    put:
-      tags:
-        - Boards
-      summary: Update board
-      description: Updates a Board by ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              title: example
-              properties:
-                title:
-                  type: string
-                  description: The board's name
-                columns:
-                  type: array
-                  description: The board's column list
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        description: column's id
-                      title:
-                        type: string
-                        description: column's title
-                      order:
-                        type: integer
-                  required:
-                    - title
-                    - order
-              required:
-                - title
-                - columns
-      responses:
-        200:
-          description: The board has been updated.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Board"
-        400:
-          description: Bad request
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-    delete:
-      tags:
-        - Boards
-      summary: Delete board
-      description: Deletes a Board by ID.
-        When somebody DELETE Board,
-        all its Tasks should be deleted as well
-      responses:
-        204:
-          description: The board has been deleted
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: Board not found
-  /boards/{boardId}/tasks:
-    parameters:
-      - name: boardId
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      tags:
-        - Tasks
-      summary: Get Tasks by boardId
-      description: Gets tasks by the Board ID
-        (e.g. “/board/1/tasks”)
-      responses:
-        200:
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Task"
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-
-    post:
-      tags:
-        - Tasks
-      summary: Create new task
-      description: Creates a new task
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              title: example
-              properties:
-                title:
-                  type: string
-                  description: The task's title
-                order:
-                  type: integer
-                  description: The task's order
-                description:
-                  type: string
-                userId:
-                  type: string
-                  description: The task's Assignee
-                boardId:
-                  type: string
-                  description: Board ID
-                columnId:
-                  type: string
-                  description: Column ID
-              required:
-                - title
-                - order
-                - boardId
-                - columnId
-      responses:
-        201:
-          description: The task has been created.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        400:
-          description: Bad request
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-  /boards/{boardId}/tasks/{taskId}:
-    parameters:
-      - name: boardId
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: taskId
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      tags:
-        - Tasks
-      summary: Get Task by boardId and taskId
-      description: Gets the Task by the Board's and task ID
-        (e.g. “/board/1/tasks/123”)
-      responses:
-        200:
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-    put:
-      tags:
-        - Tasks
-      summary: Update Task
-      description: Updates the Task by ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              title: example
-              properties:
-                title:
-                  type: string
-                  description: The task's title
-                order:
-                  type: integer
-                  description: The task's order
-                description:
-                  type: string
-                userId:
-                  type: string
-                  description: The task's Assignee
-                boardId:
-                  type: string
-                  description: Board ID
-                columnId:
-                  type: string
-                  description: Column ID
-              required:
-                - order
-                - boardId
-                - columnId
-      responses:
-        200:
-          description: The task has been updated.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        400:
-          description: Bad request
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: Task not found
-    delete:
-      tags:
-        - Tasks
-      summary: Delete Task
-      description: Deletes Task by ID.
-      responses:
-        204:
-          description: The task has been deleted
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: Task not found
+        '200':
+          description: ""
   /login:
     post:
-      tags:
-        - Login
-      security:
-        []
-      summary: Login
-      description: Logins a user and returns a JWT-token
+      operationId: AppController_login
+      parameters: []
+      responses:
+        '201':
+          description: ""
+  /users:
+    post:
+      operationId: UsersController_create
+      summary: 'Create one User 👻'
+      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              title: example
-              properties:
-                login:
-                  type: string
-                  description: Username
-                password:
-                  type: string
-                  description: Password
-              required:
-                - user
-                - login
+              $ref: '#/components/schemas/CreateUserDto'
       responses:
-        200:
-          description: Successful login.
+        '201':
+          description: 'The found record'
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                description: JWT Token
-        403:
-          description: Incorrect login or password
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    get:
+      operationId: UsersController_findAll
+      summary: 'Retrieve many Users 👻'
+      parameters: []
+      responses:
+        '200':
+          description: 'The found records'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+  '/users/{id}':
+    get:
+      operationId: UsersController_findOne
+      summary: 'Retrieve one User 👻'
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    put:
+      operationId: UsersController_update
+      summary: 'Update one User 👻'
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: 'The updated record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    delete:
+      operationId: UsersController_remove
+      summary: 'Delete one User 👻'
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The deleted record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseUserDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+  /boards:
+    post:
+      operationId: BoardsController_create
+      summary: 'Create one Board 👻'
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBoardDto'
+      responses:
+        '201':
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    get:
+      operationId: BoardsController_findAll
+      summary: 'Retrieve many Boards 👻'
+      parameters: []
+      responses:
+        '200':
+          description: 'The found records'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+  '/boards/{id}':
+    get:
+      operationId: BoardsController_findOne
+      summary: 'Retrieve one Board 👻'
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    put:
+      operationId: BoardsController_update
+      summary: 'Update one Board 👻'
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBoardDto'
+      responses:
+        '200':
+          description: 'The updated record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    delete:
+      operationId: BoardsController_remove
+      summary: 'Delete one Board 👻'
+      parameters:
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The deleted record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBoardDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+  '/boards/{boardId}/tasks':
+    post:
+      operationId: TasksController_create
+      summary: 'Create one Task 👻'
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskDto'
+      responses:
+        '201':
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    get:
+      operationId: TasksController_findAllByBoardId
+      summary: 'Retrieve many Tasks 👻'
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The found records'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+  '/boards/{boardId}/tasks/{id}':
+    get:
+      operationId: TasksController_findOneByBoardIdAndTaskId
+      summary: 'Retrieve one Task 👻'
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The found record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    put:
+      operationId: TasksController_updateByBoardIdAndTaskId
+      summary: 'Update one Task 👻'
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskDto'
+      responses:
+        '200':
+          description: 'The updated record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
+    delete:
+      operationId: TasksController_removeByBoardIdAndTaskId
+      summary: 'Delete one Task 👻'
+      parameters:
+        -
+          name: boardId
+          required: true
+          in: path
+          schema:
+            type: string
+        -
+          name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The deleted record'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseTaskDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        -
+          bearer: []
