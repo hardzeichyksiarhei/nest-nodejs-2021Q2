@@ -101,7 +101,7 @@ npm run test:auth <suite name>
 
 # Express
 
-|                              |                              |                     |
+| Title                        | Legend                       | Value               |
 | ---------------------------- | ---------------------------- | ------------------- |
 | Requests                     | [Completed]                  | 600                 |
 | Mean                         | [respsonse/sec]              | 6.03                |
@@ -111,7 +111,7 @@ npm run test:auth <suite name>
 
 # Fastify
 
-|                              |                              |                      |
+| Title                        | Legend                       | Value                |
 | ---------------------------- | ---------------------------- | -------------------- |
 | Requests                     | [Completed]                  | 600                  |
 | Mean                         | [respsonse/sec]              | 6.03                 |
