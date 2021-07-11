@@ -37,7 +37,7 @@ $ npm run start:prod
 
 ## Running application: Docker
 
-Кun all services:
+Run all services:
 
 ```bash
 # development mode
