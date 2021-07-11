@@ -73,5 +73,9 @@ After starting the app on port (4000 as default) you can open in your browser Op
 ## Test
 
 ```bash
+# To run all test with authorization
 $ npm run test:auth
+
+# To run only specific test suite with authorization (users, boards or tasks)
+npm run test:auth <suite name>
 ```
