@@ -1,4 +1,3 @@
-
 # RS School REST service
 
 ## Prerequisites
@@ -37,6 +36,7 @@ $ npm run start:prod
 ```
 
 ## Running application: Docker
+
 Кun all services:
 
 ```bash
@@ -44,8 +44,9 @@ $ npm run start:prod
 $ docker-compose up
 
 # production mode
-$ docker-compose -f docker-compose.prod.yml up 
+$ docker-compose -f docker-compose.prod.yml up
 ```
+
 To run it in background, use `-d` flag
 
 #### Services:
@@ -57,20 +58,27 @@ To run it in background, use `-d` flag
 To run cli commands, first make sure containers are running and use following command `docker exec -it <container_name> /bin/sh <command>`
 
 ## DB
-DB settings are stored in POSTGRES_* env variables. see [.env](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env) or [.env.docker](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env.docker).
+
+DB settings are stored in POSTGRES\_\* env variables. see [.env](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env) or [.env.docker](https://github.com/hardzeichyksiarhei/nest-nodejs-2021Q2/blob/task9/nestjs/.env.docker).
 
 ## Migrations
+
 Running migrations:
+
 ```
 $ npm run migration:run
 ```
+
 Revert migration:
+
 ```
 $ npm run migration:revert
 ```
 
 ## Seeding
+
 Running seeds:
+
 ```
 $ npm run seed:run
 ```
@@ -88,3 +96,25 @@ $ npm run test:auth
 # To run only specific test suite with authorization (users, boards or tasks)
 npm run test:auth <suite name>
 ```
+
+---
+
+# Express
+
+|                              |                              |                     |
+| ---------------------------- | ---------------------------- | ------------------- |
+| Requests                     | [Completed]                  | 600                 |
+| Mean                         | [respsonse/sec]              | 6.03                |
+| Overall Latency Distribution | [min, max, median, p95, p99] | 2, 174, 47, 94, 134 |
+| Success                      | [ratio]                      | 100.00%             |
+| Status Codes                 | [code:count]                 | 200: 400; 201: 200  |
+
+# Fastify
+
+|                              |                              |                      |
+| ---------------------------- | ---------------------------- | -------------------- |
+| Requests                     | [Completed]                  | 600                  |
+| Mean                         | [respsonse/sec]              | 6.03                 |
+| Overall Latency Distribution | [min, max, median, p95, p99] | 1, 158, 40.5, 59, 63 |
+| Success                      | [ratio]                      | 100.00%              |
+| Status Codes                 | [code:count]                 | 200: 480; 201: 120   |
